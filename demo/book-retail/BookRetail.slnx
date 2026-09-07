@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Checkout/Checkout.csproj" />
+  <Project Path="Contracts/Contracts.csproj" />
+  <Project Path="InventoryWorker/InventoryWorker.csproj" />
+  <Project Path="LegacyFulfillment/LegacyFulfillment.csproj" />
+  <Project Path="Notifications/Notifications.csproj" />
+  <Project Path="Ordering/Ordering.csproj" />
+</Solution>

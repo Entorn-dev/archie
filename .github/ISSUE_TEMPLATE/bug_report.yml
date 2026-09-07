@@ -1,0 +1,52 @@
+name: Bug report
+description: Report reproducible incorrect behavior in Archie
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Do not include private source, generated architecture artifacts, credentials, private remotes, or customer data. Report security vulnerabilities through the process in SECURITY.md instead.
+  - type: input
+    id: version
+    attributes:
+      label: Archie version
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, architecture, .NET version, and installation method.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest safe sequence that reproduces the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include sanitized diagnostics when useful.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Safety checklist
+      options:
+        - label: I removed private source, generated artifacts, credentials, private remotes, and customer data.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true

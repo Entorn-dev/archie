@@ -1,0 +1,1038 @@
+{
+  "schemaVersion": "architecture/v1",
+  "id": "graph:archie:reconciled",
+  "composition": {
+    "policy": "single-repository",
+    "inputs": [
+      {
+        "repository": {
+          "repositoryId": "archie",
+          "remoteUrl": "https://github.com/Entorn-dev/archie",
+          "revision": "ff47bd2954a6505fc41b624751eb8b39266e3133",
+          "isDirty": false,
+          "contentDigest": "94b692a06491ce114f2671e46a6f612cc55efb37db4e8937d2231d8656e120a5"
+        },
+        "observationBundleDigest": "c93a8b818d7cc92512c258f4feecf536eea184e232b30539fe07a3e9b793b8b7"
+      }
+    ]
+  },
+  "overlayDigest": "640c65866dcf236b0d4f0d5842819f804db77f53819b7ce7bca8a3a3e0158af3",
+  "governanceDate": "2026-09-01",
+  "nodes": [
+    {
+      "id": "channel:dispatch-requested",
+      "kind": "message-channel",
+      "name": "dispatch.requested",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Announces a legacy warehouse dispatch.",
+        "environment": "current",
+        "glossary": [
+          "dispatch: a warehouse shipment hand-off"
+        ],
+        "onboarding": [
+          "Inspect the legacy publisher",
+          "Follow notification subscribers"
+        ],
+        "owner": "team:fulfilment",
+        "purpose": "Connect legacy fulfilment to current notifications."
+      },
+      "evidenceIds": [
+        "evidence:legacy-publishes-dispatch",
+        "evidence:node:channel:dispatch-requested"
+      ]
+    },
+    {
+      "id": "channel:fulfilment-requested",
+      "kind": "message-channel",
+      "name": "fulfilment.requested",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Hands paid orders to legacy fulfilment.",
+        "environment": "legacy",
+        "glossary": [
+          "fulfilment: preparing an order for shipment"
+        ],
+        "onboarding": [
+          "Trace the current-to-legacy boundary"
+        ],
+        "owner": "team:fulfilment",
+        "purpose": "Bridge current ordering to the legacy warehouse flow."
+      },
+      "evidenceIds": [
+        "evidence:legacy-subscribes-fulfilment",
+        "evidence:node:channel:fulfilment-requested"
+      ]
+    },
+    {
+      "id": "channel:inventory-reservation",
+      "kind": "message-channel",
+      "name": "inventory.reservation-requested",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Requests stock reservation.",
+        "environment": "current",
+        "glossary": [
+          "reservation: held stock for a paid order"
+        ],
+        "onboarding": [
+          "Inspect the inventory worker"
+        ],
+        "owner": "team:inventory",
+        "purpose": "Decouple order coordination from stock writes."
+      },
+      "evidenceIds": [
+        "evidence:inventory-subscribes-reservation",
+        "evidence:node:channel:inventory-reservation"
+      ]
+    },
+    {
+      "id": "channel:order-submitted",
+      "kind": "message-channel",
+      "name": "order.submitted",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Carries accepted orders into asynchronous processing.",
+        "environment": "current",
+        "glossary": [
+          "submitted order: payment accepted, awaiting processing"
+        ],
+        "onboarding": [
+          "Inspect publisher evidence",
+          "Follow Ordering Service"
+        ],
+        "owner": "team:ordering",
+        "purpose": "Begin durable order processing after checkout."
+      },
+      "evidenceIds": [
+        "evidence:checkout-publishes-order-submitted",
+        "evidence:node:channel:order-submitted"
+      ]
+    },
+    {
+      "id": "database:inventory",
+      "kind": "database",
+      "name": "Inventory database",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Stores current stock reservations.",
+        "environment": "current",
+        "glossary": [],
+        "onboarding": [
+          "Review writes from Inventory Worker"
+        ],
+        "owner": "team:inventory",
+        "purpose": "Persist reservation state."
+      },
+      "evidenceIds": [
+        "evidence:inventory-writes-database",
+        "evidence:node:database:inventory"
+      ]
+    },
+    {
+      "id": "database:orders",
+      "kind": "database",
+      "name": "Orders database",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Stores accepted order state.",
+        "environment": "current",
+        "glossary": [],
+        "onboarding": [
+          "Review writes from Ordering Service"
+        ],
+        "owner": "team:ordering",
+        "purpose": "Persist the ordering lifecycle."
+      },
+      "evidenceIds": [
+        "evidence:node:database:orders",
+        "evidence:ordering-writes-orders"
+      ]
+    },
+    {
+      "id": "deployable:catalogue-service",
+      "kind": "deployable",
+      "name": "Catalogue Service",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Provides books and availability through a Go API.",
+        "environment": "current",
+        "glossary": [
+          "catalogue: saleable book metadata"
+        ],
+        "onboarding": [
+          "Start with the availability endpoint"
+        ],
+        "owner": "team:catalogue",
+        "purpose": "Serve catalogue and availability data."
+      },
+      "evidenceIds": [
+        "evidence:node:deployable:catalogue-service"
+      ]
+    },
+    {
+      "id": "deployable:checkout-service",
+      "kind": "deployable",
+      "name": "Checkout Service",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Accepts checkout requests and submits paid orders.",
+        "environment": "current",
+        "glossary": [
+          "checkout: converting a basket into a paid order"
+        ],
+        "onboarding": [
+          "Read the checkout endpoint",
+          "Inspect payment and publish relationships"
+        ],
+        "owner": "team:checkout",
+        "purpose": "Validate baskets, collect payment, and publish accepted orders."
+      },
+      "evidenceIds": [
+        "evidence:checkout-calls-payment",
+        "evidence:node:deployable:checkout-service"
+      ]
+    },
+    {
+      "id": "deployable:inventory-worker",
+      "kind": "deployable",
+      "name": "Inventory Worker",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Reserves stock for accepted orders.",
+        "environment": "current",
+        "glossary": [],
+        "onboarding": [
+          "Follow the reservation subscription"
+        ],
+        "owner": "team:inventory",
+        "purpose": "Consume reservation requests and persist stock state."
+      },
+      "evidenceIds": [
+        "evidence:inventory-subscribes-reservation",
+        "evidence:node:deployable:inventory-worker"
+      ]
+    },
+    {
+      "id": "deployable:legacy-fulfilment",
+      "kind": "deployable",
+      "name": "Legacy Fulfilment Functions",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Legacy Azure Functions coordinating warehouse dispatch.",
+        "environment": "legacy",
+        "glossary": [
+          "legacy boundary: Azure Functions outside the current Kubernetes platform"
+        ],
+        "onboarding": [
+          "Inspect the Service Bus trigger",
+          "Follow dispatch publishing"
+        ],
+        "owner": "team:fulfilment",
+        "purpose": "Turn fulfilment requests into warehouse dispatches."
+      },
+      "evidenceIds": [
+        "evidence:legacy-publishes-dispatch",
+        "evidence:node:deployable:legacy-fulfilment"
+      ]
+    },
+    {
+      "id": "deployable:notification-service",
+      "kind": "deployable",
+      "name": "Notification Service",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Notifies customers when warehouse dispatch begins.",
+        "environment": "current",
+        "glossary": [],
+        "onboarding": [
+          "Inspect the dispatch subscription"
+        ],
+        "owner": "team:customer-comms",
+        "purpose": "Consume dispatch events and notify customers."
+      },
+      "evidenceIds": [
+        "evidence:node:deployable:notification-service",
+        "evidence:notifications-subscribes-dispatch"
+      ]
+    },
+    {
+      "id": "deployable:ordering-service",
+      "kind": "deployable",
+      "name": "Ordering Service",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Consumes submitted orders and coordinates fulfilment.",
+        "environment": "current",
+        "glossary": [
+          "ordering: orchestration after payment"
+        ],
+        "onboarding": [
+          "Start at order.submitted",
+          "Follow inventory and fulfilment branches"
+        ],
+        "owner": "team:ordering",
+        "purpose": "Persist orders and coordinate inventory and fulfilment."
+      },
+      "evidenceIds": [
+        "evidence:node:deployable:ordering-service",
+        "evidence:ordering-publishes-fulfilment"
+      ]
+    },
+    {
+      "id": "deployable:storefront",
+      "kind": "deployable",
+      "name": "Storefront",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "TypeScript customer storefront for browsing and checkout.",
+        "environment": "current",
+        "glossary": [
+          "basket: books selected before checkout"
+        ],
+        "onboarding": [
+          "Follow calls to Catalogue and Checkout"
+        ],
+        "owner": "team:storefront",
+        "purpose": "Begin the customer place-an-order journey."
+      },
+      "evidenceIds": [
+        "evidence:node:deployable:storefront",
+        "evidence:storefront-calls-checkout"
+      ]
+    },
+    {
+      "id": "external:payment-provider",
+      "kind": "external-service",
+      "name": "Payment Provider",
+      "resolution": "resolved",
+      "aliases": [],
+      "properties": {
+        "description": "Safe local payment-provider stub.",
+        "environment": "external",
+        "glossary": [],
+        "onboarding": [
+          "Inspect the Checkout call boundary"
+        ],
+        "owner": "team:checkout",
+        "purpose": "Authorize development payments."
+      },
+      "evidenceIds": [
+        "evidence:checkout-calls-payment",
+        "evidence:node:external:payment-provider"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge:checkout-calls-payment",
+      "kind": "calls",
+      "from": "deployable:checkout-service",
+      "to": "external:payment-provider",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic",
+        "manual"
+      ],
+      "properties": {
+        "label": "authorizes payment"
+      },
+      "evidenceIds": [
+        "evidence:checkout-calls-payment",
+        "evidence:overlay:edge:checkout-calls-payment"
+      ]
+    },
+    {
+      "id": "edge:checkout-publishes-order-submitted",
+      "kind": "publishes",
+      "from": "deployable:checkout-service",
+      "to": "channel:order-submitted",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "publishes order.submitted"
+      },
+      "evidenceIds": [
+        "evidence:checkout-publishes-order-submitted"
+      ]
+    },
+    {
+      "id": "edge:inventory-subscribes-reservation",
+      "kind": "subscribes",
+      "from": "deployable:inventory-worker",
+      "to": "channel:inventory-reservation",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "subscribes to inventory reservation"
+      },
+      "evidenceIds": [
+        "evidence:inventory-subscribes-reservation"
+      ]
+    },
+    {
+      "id": "edge:inventory-writes-database",
+      "kind": "writes-to",
+      "from": "deployable:inventory-worker",
+      "to": "database:inventory",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "writes reservations"
+      },
+      "evidenceIds": [
+        "evidence:inventory-writes-database"
+      ]
+    },
+    {
+      "id": "edge:legacy-publishes-dispatch",
+      "kind": "publishes",
+      "from": "deployable:legacy-fulfilment",
+      "to": "channel:dispatch-requested",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "publishes dispatch.requested"
+      },
+      "evidenceIds": [
+        "evidence:legacy-publishes-dispatch"
+      ]
+    },
+    {
+      "id": "edge:legacy-subscribes-fulfilment",
+      "kind": "subscribes",
+      "from": "deployable:legacy-fulfilment",
+      "to": "channel:fulfilment-requested",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "subscribes to fulfilment.requested"
+      },
+      "evidenceIds": [
+        "evidence:legacy-subscribes-fulfilment"
+      ]
+    },
+    {
+      "id": "edge:notifications-subscribes-dispatch",
+      "kind": "subscribes",
+      "from": "deployable:notification-service",
+      "to": "channel:dispatch-requested",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "subscribes to dispatch.requested"
+      },
+      "evidenceIds": [
+        "evidence:notifications-subscribes-dispatch"
+      ]
+    },
+    {
+      "id": "edge:ordering-publishes-fulfilment",
+      "kind": "publishes",
+      "from": "deployable:ordering-service",
+      "to": "channel:fulfilment-requested",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "publishes fulfilment.requested"
+      },
+      "evidenceIds": [
+        "evidence:ordering-publishes-fulfilment"
+      ]
+    },
+    {
+      "id": "edge:ordering-publishes-reservation",
+      "kind": "publishes",
+      "from": "deployable:ordering-service",
+      "to": "channel:inventory-reservation",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "publishes inventory reservation"
+      },
+      "evidenceIds": [
+        "evidence:ordering-publishes-reservation"
+      ]
+    },
+    {
+      "id": "edge:ordering-subscribes-order-submitted",
+      "kind": "subscribes",
+      "from": "deployable:ordering-service",
+      "to": "channel:order-submitted",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "subscribes to order.submitted"
+      },
+      "evidenceIds": [
+        "evidence:ordering-subscribes-order-submitted"
+      ]
+    },
+    {
+      "id": "edge:ordering-writes-orders",
+      "kind": "writes-to",
+      "from": "deployable:ordering-service",
+      "to": "database:orders",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "writes order state"
+      },
+      "evidenceIds": [
+        "evidence:ordering-writes-orders"
+      ]
+    },
+    {
+      "id": "edge:storefront-calls-catalogue",
+      "kind": "calls",
+      "from": "deployable:storefront",
+      "to": "deployable:catalogue-service",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "manual"
+      ],
+      "properties": {
+        "label": "gets books and availability"
+      },
+      "evidenceIds": [
+        "evidence:overlay:edge:storefront-calls-catalogue"
+      ]
+    },
+    {
+      "id": "edge:storefront-calls-checkout",
+      "kind": "calls",
+      "from": "deployable:storefront",
+      "to": "deployable:checkout-service",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "provenance": [
+        "deterministic"
+      ],
+      "properties": {
+        "label": "places an order"
+      },
+      "evidenceIds": [
+        "evidence:storefront-calls-checkout"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "evidence:checkout-calls-payment",
+      "claimId": "edge:checkout-calls-payment",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 179,
+        "startColumn": 1,
+        "endLine": 179,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:checkout-publishes-order-submitted",
+      "claimId": "edge:checkout-publishes-order-submitted",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 179,
+        "startColumn": 1,
+        "endLine": 179,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:inventory-subscribes-reservation",
+      "claimId": "edge:inventory-subscribes-reservation",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 181,
+        "startColumn": 1,
+        "endLine": 181,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:inventory-writes-database",
+      "claimId": "edge:inventory-writes-database",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 181,
+        "startColumn": 1,
+        "endLine": 181,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:legacy-publishes-dispatch",
+      "claimId": "edge:legacy-publishes-dispatch",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 183,
+        "startColumn": 1,
+        "endLine": 183,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:legacy-subscribes-fulfilment",
+      "claimId": "edge:legacy-subscribes-fulfilment",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 182,
+        "startColumn": 1,
+        "endLine": 182,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:channel:dispatch-requested",
+      "claimId": "observation:node:channel:dispatch-requested",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:channel:fulfilment-requested",
+      "claimId": "observation:node:channel:fulfilment-requested",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:channel:inventory-reservation",
+      "claimId": "observation:node:channel:inventory-reservation",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:channel:order-submitted",
+      "claimId": "observation:node:channel:order-submitted",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:database:inventory",
+      "claimId": "observation:node:database:inventory",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:database:orders",
+      "claimId": "observation:node:database:orders",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:deployable:catalogue-service",
+      "claimId": "observation:node:deployable:catalogue-service",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:deployable:checkout-service",
+      "claimId": "observation:node:deployable:checkout-service",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:deployable:inventory-worker",
+      "claimId": "observation:node:deployable:inventory-worker",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:deployable:legacy-fulfilment",
+      "claimId": "observation:node:deployable:legacy-fulfilment",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:deployable:notification-service",
+      "claimId": "observation:node:deployable:notification-service",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:deployable:ordering-service",
+      "claimId": "observation:node:deployable:ordering-service",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:deployable:storefront",
+      "claimId": "observation:node:deployable:storefront",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:node:external:payment-provider",
+      "claimId": "observation:node:external:payment-provider",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:notifications-subscribes-dispatch",
+      "claimId": "edge:notifications-subscribes-dispatch",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 183,
+        "startColumn": 1,
+        "endLine": 183,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:ordering-publishes-fulfilment",
+      "claimId": "edge:ordering-publishes-fulfilment",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 182,
+        "startColumn": 1,
+        "endLine": 182,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:ordering-publishes-reservation",
+      "claimId": "edge:ordering-publishes-reservation",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 180,
+        "startColumn": 1,
+        "endLine": 181,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:ordering-subscribes-order-submitted",
+      "claimId": "edge:ordering-subscribes-order-submitted",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 180,
+        "startColumn": 1,
+        "endLine": 180,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:ordering-writes-orders",
+      "claimId": "edge:ordering-writes-orders",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 180,
+        "startColumn": 1,
+        "endLine": 180,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    },
+    {
+      "id": "evidence:overlay:edge:checkout-calls-payment",
+      "claimId": "edge:checkout-calls-payment",
+      "provenance": "manual",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "governed architecture overlay",
+      "path": "tests/fixtures/overlays/book-retail.overlay.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "lastReviewedOn": "2026-09-01",
+        "owner": "role:architecture-maintainer",
+        "rationale": "Preserve the approved book-retail journey until language scanners arrive in later slices.",
+        "reviewStatus": "current",
+        "reviewer": "role:architecture-reviewer"
+      }
+    },
+    {
+      "id": "evidence:overlay:edge:storefront-calls-catalogue",
+      "claimId": "edge:storefront-calls-catalogue",
+      "provenance": "manual",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "governed architecture overlay",
+      "path": "tests/fixtures/overlays/book-retail.overlay.json",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {
+        "lastReviewedOn": "2026-09-01",
+        "owner": "role:architecture-maintainer",
+        "rationale": "Preserve the approved book-retail journey until language scanners arrive in later slices.",
+        "reviewStatus": "current",
+        "reviewer": "role:architecture-reviewer"
+      }
+    },
+    {
+      "id": "evidence:storefront-calls-checkout",
+      "claimId": "edge:storefront-calls-checkout",
+      "provenance": "deterministic",
+      "scannerId": null,
+      "scannerVersion": null,
+      "extractionMethod": "authored Book Retail fixture observation (not scanner-derived)",
+      "path": "tests/fixtures/observations/book-retail.authored.json",
+      "range": {
+        "startLine": 178,
+        "startColumn": 1,
+        "endLine": 179,
+        "endColumn": 100
+      },
+      "confidence": "confirmed",
+      "properties": {
+        "observationSource": "authored"
+      }
+    }
+  ],
+  "mergeDecisions": [
+    {
+      "id": "decision:relationship:edge:checkout-calls-payment",
+      "outcome": "merged",
+      "candidateIds": [
+        "edge:checkout-calls-payment"
+      ],
+      "rationale": "same relationship kind and canonical endpoints"
+    }
+  ],
+  "diagnostics": [],
+  "redactions": []
+}

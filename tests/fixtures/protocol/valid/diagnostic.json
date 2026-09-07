@@ -1,0 +1,11 @@
+{
+  "protocolVersion": "scanner/v1",
+  "type": "diagnostic",
+  "diagnostic": {
+    "id": "diagnostic:fixture",
+    "code": "FIXTURE_INFORMATION",
+    "severity": "info",
+    "message": "Fixture worker completed semantic discovery.",
+    "subjectId": null
+  }
+}

@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Archie.Api/Archie.Api.csproj" />
+    <Project Path="src/Archie.Cli/Archie.Cli.csproj" />
+    <Project Path="src/Archie.Contracts/Archie.Contracts.csproj" />
+    <Project Path="src/Archie.Core/Archie.Core.csproj" />
+    <Project Path="src/Archie.Runner/Archie.Runner.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Archie.Api.Tests/Archie.Api.Tests.csproj" />
+    <Project Path="tests/Archie.Cli.Tests/Archie.Cli.Tests.csproj" />
+    <Project Path="tests/Archie.Contracts.Tests/Archie.Contracts.Tests.csproj" />
+    <Project Path="tests/Archie.Core.Tests/Archie.Core.Tests.csproj" />
+    <Project Path="tests/Archie.Runner.Tests/Archie.Runner.Tests.csproj" />
+  </Folder>
+</Solution>

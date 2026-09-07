@@ -1,0 +1,4 @@
+{
+  "request": { "method": "POST", "path": "/payments" },
+  "response": { "status": 200, "body": { "status": "authorized", "providerReference": "local-demo" } }
+}

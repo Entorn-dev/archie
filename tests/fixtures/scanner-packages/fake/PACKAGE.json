@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "scanner-package/v1",
+  "id": "archie.fake-book-retail",
+  "version": "1.0.0",
+  "sourceRepository": "https://github.com/archie-dev/fake-scanner",
+  "sourceTag": "v1.0.0",
+  "platform": "linux",
+  "architecture": "x64",
+  "archieVersionRange": "[1.0.0,2.0.0)",
+  "protocolVersion": "scanner/v1",
+  "expandedBytes": 1048576,
+  "entryCount": 4,
+  "capabilities": ["fake-book-retail-observations"],
+  "permissions": {
+    "readRepository": true,
+    "network": false,
+    "environment": false
+  },
+  "license": "MIT",
+  "publisherKeyId": null
+}

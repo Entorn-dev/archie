@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="JsonSchema.Net" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Entorn.Scanner.Contracts" />
+    <ProjectReference Include="../Archie.Core/Archie.Core.csproj" />
+    <Using Include="Entorn.Scanner.Contracts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="../../schemas/v1/*.schema.json" Link="schemas/v1/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Archie.Runner.Tests" />
+  </ItemGroup>
+</Project>

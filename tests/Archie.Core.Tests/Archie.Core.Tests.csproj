@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Entorn.Scanner.Contracts" />
+    <ProjectReference Include="../../src/Archie.Contracts/Archie.Contracts.csproj" />
+    <ProjectReference Include="../../src/Archie.Core/Archie.Core.csproj" />
+    <Using Include="Entorn.Scanner.Contracts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="../fixtures/graphs/book-retail-minimal.json" Link="fixtures/graphs/book-retail-minimal.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/observations/book-retail.authored.json" Link="fixtures/observations/book-retail.authored.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/overlays/book-retail.overlay.json" Link="fixtures/overlays/book-retail.overlay.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

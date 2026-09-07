@@ -1,0 +1,29 @@
+{
+  "protocolVersion": "scanner/v1",
+  "type": "observation",
+  "observation": {
+    "kind": "entity",
+    "id": "observation:book-api",
+    "evidence": {
+      "id": "evidence:book-api",
+      "claimId": "claim:book-api",
+      "provenance": "deterministic",
+      "scannerId": "archie.fixture",
+      "scannerVersion": "1.0.0",
+      "extractionMethod": "fixture",
+      "path": "src/BookApi.cs",
+      "range": null,
+      "confidence": "confirmed",
+      "properties": {}
+    },
+    "entity": {
+      "key": "component:book-api",
+      "kind": "component",
+      "explicitId": null,
+      "name": "Book API",
+      "resolution": "resolved",
+      "identitySignals": {},
+      "properties": {}
+    }
+  }
+}

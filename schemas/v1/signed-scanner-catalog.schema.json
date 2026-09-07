@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archie.dev/schemas/v1/signed-scanner-catalog.schema.json",
+  "title": "Archie signed scanner catalog envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "keyId", "payload", "signature"],
+  "properties": {
+    "schemaVersion": { "const": "signed-scanner-catalog/v1" },
+    "keyId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "payload": { "type": "string", "minLength": 1, "contentEncoding": "base64" },
+    "signature": { "type": "string", "minLength": 1, "contentEncoding": "base64" }
+  }
+}

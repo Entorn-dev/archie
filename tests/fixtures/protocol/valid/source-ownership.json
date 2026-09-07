@@ -1,0 +1,14 @@
+{
+  "protocolVersion": "scanner/v1",
+  "type": "source-ownership",
+  "ownership": {
+    "scannerId": "archie.fixture",
+    "scannerVersion": "1.0.0",
+    "path": "src/BookApi.cs",
+    "ownerCandidateKey": "component:book-api",
+    "ownershipKind": "component",
+    "confidence": "confirmed",
+    "resolution": "resolved",
+    "derivationRule": "fixture:project-membership"
+  }
+}

@@ -1,0 +1,22 @@
+services:
+  demo:
+    command: '"$HOME/.local/bin/mise" exec -- scripts/run-book-retail.sh'
+    port: 4400
+    health: /health
+  api:
+    command: '"$HOME/.local/bin/mise" exec -- scripts/ensure-book-retail-graph.sh && AIP_GRAPH_PATH="$PWD/.amp/generated/book-retail.graph.json" "$HOME/.local/bin/mise" exec -- dotnet run --project src/Archie.Api/Archie.Api.csproj --no-launch-profile --no-restore'
+    port: 4317
+    health: /health
+    env:
+      ASPNETCORE_URLS: http://0.0.0.0:4317
+      ASPNETCORE_ENVIRONMENT: Development
+  web:
+    command: '"$HOME/.local/bin/mise" exec -- bash -lc ''pnpm --dir web build && pnpm --dir web preview --host 0.0.0.0 --port "$PORT"'''
+    port: 5173
+    health: /health
+    portal:
+      url: /
+      title: Archie · Book Retail
+      description: Explore the local dependency and inferred-runtime maps with canonical evidence.
+    review: true
+    agent: observe

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "overlay/v1",
+  "defaultOwner": "role:architecture-maintainer",
+  "entries": [
+    {
+      "kind": "manual-relationship",
+      "id": "edge:checkout-calls-payment",
+      "governance": {
+        "owner": null,
+        "reviewer": "role:architecture-reviewer",
+        "rationale": "Preserve the approved book-retail journey until language scanners arrive in later slices.",
+        "createdOn": "2026-09-01",
+        "lastReviewedOn": "2026-09-01",
+        "reviewIntervalDays": 90,
+        "expiresOn": null
+      },
+      "relationship": "calls",
+      "from": "deployable:checkout-service",
+      "to": "external:payment-provider",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "properties": {
+        "label": "authorizes payment"
+      },
+      "evidencePath": "tests/fixtures/overlays/book-retail.overlay.json",
+      "range": null
+    },
+    {
+      "kind": "manual-relationship",
+      "id": "edge:storefront-calls-catalogue",
+      "governance": {
+        "owner": null,
+        "reviewer": "role:architecture-reviewer",
+        "rationale": "Preserve the approved book-retail journey until language scanners arrive in later slices.",
+        "createdOn": "2026-09-01",
+        "lastReviewedOn": "2026-09-01",
+        "reviewIntervalDays": 90,
+        "expiresOn": null
+      },
+      "relationship": "calls",
+      "from": "deployable:storefront",
+      "to": "deployable:catalogue-service",
+      "confidence": "confirmed",
+      "resolution": "resolved",
+      "properties": {
+        "label": "gets books and availability"
+      },
+      "evidencePath": "tests/fixtures/overlays/book-retail.overlay.json",
+      "range": null
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+mise_bin="$HOME/.local/bin/mise"
+
+[[ -x "$mise_bin" ]] || { echo "Archie toolchain is missing; run .agents/setup" >&2; exit 1; }
+"$mise_bin" current --cd "$repo_root" >/dev/null
+eval "$("$mise_bin" env --cd "$repo_root" -s bash)"
+
+verify_scanner() {
+  local id="$1" version="$2" manifest="$repo_root/.amp/runtime/scanners/$1-$2/scanner.json"
+  [[ -f "$manifest" ]] || { echo "Required scanner is missing at $manifest; run .agents/setup" >&2; exit 1; }
+  node -e '
+    const fs = require("node:fs");
+    const [path, id, version] = process.argv.slice(1);
+    const manifest = JSON.parse(fs.readFileSync(path, "utf8"));
+    if (manifest.id !== `archie.${id}` || manifest.version !== version) {
+      console.error(`Required scanner manifest mismatch at ${path}; run .agents/setup`);
+      process.exit(1);
+    }
+  ' "$manifest" "$id" "$version"
+}
+
+verify_scanner dotnet 1.3.0
+verify_scanner php 2.0.0
+echo "Archie pinned toolchain and scanners are ready. In non-login shells, run commands with: $mise_bin exec -- <command>"

@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@v3
+        with:
+          install: true
+          cache: true
+      - name: Enable scanner containment
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          unshare --user --map-current-user --pid --fork --kill-child=KILL --mount-proc true
+      - run: dotnet restore Archie.slnx --locked-mode
+      - run: dotnet build Archie.slnx --no-restore
+      - run: dotnet test Archie.slnx --no-build --no-restore
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm --dir demo/book-retail/storefront typecheck
+      - run: pnpm --dir demo/book-retail/storefront test
+      - run: go -C demo/book-retail/catalogue test ./...
+      - run: go -C demo/book-retail/kafka-broker test ./...
+      - run: pnpm --dir web exec playwright install --with-deps chromium
+      - run: pnpm package:linux-x64
+      - run: scripts/verify-linux-package.sh
+      - run: scripts/audit-generated-artifacts.sh tests/fixtures/graphs/book-retail-minimal.json tests/fixtures/observations/book-retail.authored.json

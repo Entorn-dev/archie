@@ -1,0 +1,40 @@
+{
+  "protocolVersion": "scanner/v1",
+  "type": "observation",
+  "observation": {
+    "kind": "relationship",
+    "id": "observation:api-database",
+    "evidence": {
+      "id": "evidence:api-database",
+      "claimId": "claim:api-database",
+      "provenance": "deterministic",
+      "scannerId": "archie.fixture",
+      "scannerVersion": "1.0.0",
+      "extractionMethod": "fixture",
+      "path": "src/BookApi.cs",
+      "range": { "startLine": 1, "startColumn": 1, "endLine": 1, "endColumn": 10 },
+      "confidence": "confirmed",
+      "properties": {}
+    },
+    "relationship": "writes-to",
+    "from": {
+      "key": "component:book-api",
+      "kind": "component",
+      "explicitId": null,
+      "name": "Book API",
+      "resolution": "resolved",
+      "identitySignals": {},
+      "properties": {}
+    },
+    "to": {
+      "key": "database:books",
+      "kind": "database",
+      "explicitId": null,
+      "name": "Books",
+      "resolution": "resolved",
+      "identitySignals": {},
+      "properties": {}
+    },
+    "properties": {}
+  }
+}

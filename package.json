@@ -1,0 +1,18 @@
+{
+  "name": "archie",
+  "private": true,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Entorn-dev/archie.git"
+  },
+  "packageManager": "pnpm@12.1.0",
+  "scripts": {
+    "build": "pnpm --filter @archie/web build",
+    "package:linux-x64": "bash scripts/package-linux-x64.sh",
+    "reconcile:demo": "bash scripts/ensure-demo-graph.sh",
+    "test": "pnpm --filter @archie/web test",
+    "test:e2e": "pnpm --filter @archie/web test:e2e",
+    "typecheck": "pnpm --filter @archie/web typecheck"
+  }
+}

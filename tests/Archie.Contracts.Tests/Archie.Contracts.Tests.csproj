@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="JsonSchema.Net" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Entorn.Scanner.Contracts" />
+    <ProjectReference Include="../../src/Archie.Contracts/Archie.Contracts.csproj" />
+    <Using Include="Entorn.Scanner.Contracts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="../../schemas/v1/*.schema.json" Link="schemas/v1/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/graphs/book-retail-minimal.json" Link="fixtures/graphs/book-retail-minimal.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/observations/book-retail.authored.json" Link="fixtures/observations/book-retail.authored.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/overlays/book-retail.overlay.json" Link="fixtures/overlays/book-retail.overlay.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/protocol/**/*" Link="fixtures/protocol/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/scanner-packages/fake/PACKAGE.json" Link="fixtures/scanner-packages/fake/PACKAGE.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/scanner-packages/installed.json" Link="fixtures/scanner-packages/installed.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/scanners/fake-book-retail/scanner.json" Link="fixtures/scanners/fake-book-retail/scanner.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/scanners/dotnet/scanner.json" Link="fixtures/scanners/dotnet/scanner.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/scanners/php/scanner.json" Link="fixtures/scanners/php/scanner.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../fixtures/views/place-order.json" Link="fixtures/views/place-order.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

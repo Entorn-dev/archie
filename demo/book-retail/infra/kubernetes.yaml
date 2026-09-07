@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storefront
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: storefront } }
+  template:
+    metadata: { labels: { app: storefront } }
+    spec:
+      containers:
+        - { name: storefront, image: example.invalid/book-retail/storefront:demo }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogue
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: catalogue } }
+  template:
+    metadata: { labels: { app: catalogue } }
+    spec:
+      containers:
+        - { name: catalogue, image: example.invalid/book-retail/catalogue:demo }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: checkout } }
+  template:
+    metadata: { labels: { app: checkout } }
+    spec:
+      containers:
+        - { name: checkout, image: example.invalid/book-retail/checkout:demo }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordering
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: ordering } }
+  template:
+    metadata: { labels: { app: ordering } }
+    spec:
+      containers:
+        - { name: ordering, image: example.invalid/book-retail/ordering:demo }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-worker
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: inventory-worker } }
+  template:
+    metadata: { labels: { app: inventory-worker } }
+    spec:
+      containers:
+        - { name: inventory-worker, image: example.invalid/book-retail/inventory-worker:demo }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifications
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: notifications } }
+  template:
+    metadata: { labels: { app: notifications } }
+    spec:
+      containers:
+        - { name: notifications, image: example.invalid/book-retail/notifications:demo }

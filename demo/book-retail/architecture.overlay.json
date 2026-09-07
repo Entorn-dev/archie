@@ -1,0 +1,197 @@
+{
+  "schemaVersion": "overlay/v1",
+  "defaultOwner": "role:architecture-maintainer",
+  "entries": [
+    {
+      "kind": "binding",
+      "id": "binding:checkout-service",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved journey identity while the scanner remains the source of the deployable fact.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:service:Checkout/Checkout.csproj",
+      "targetId": "deployable:checkout-service"
+    },
+    {
+      "kind": "binding",
+      "id": "binding:ordering-service",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved journey identity while the scanner remains the source of the deployable fact.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:service:Ordering/Ordering.csproj",
+      "targetId": "deployable:ordering-service"
+    },
+    {
+      "kind": "binding",
+      "id": "binding:inventory-worker",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved journey identity while the scanner remains the source of the deployable fact.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:service:InventoryWorker/InventoryWorker.csproj",
+      "targetId": "deployable:inventory-worker"
+    },
+    {
+      "kind": "binding",
+      "id": "binding:legacy-fulfilment",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved legacy journey identity while the Functions scanner remains the source of the deployable fact.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:service:LegacyFulfillment/LegacyFulfillment.csproj",
+      "targetId": "deployable:legacy-fulfilment"
+    },
+    {
+      "kind": "binding",
+      "id": "binding:notification-service",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved journey identity while the scanner remains the source of the deployable fact.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:service:Notifications/Notifications.csproj",
+      "targetId": "deployable:notification-service"
+    },
+    {
+      "kind": "binding",
+      "id": "binding:laravel-storefront",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep a stable demo identity while the PHP scanner remains the source of the Laravel deployable fact.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "php:laravel-app:laravel-storefront/composer.json",
+      "targetId": "deployable:laravel-storefront"
+    },
+    {
+      "kind": "annotation",
+      "id": "annotation:laravel-storefront",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "Record the review context for the scanner-discovered static Laravel storefront fixture.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "targetId": "deployable:laravel-storefront",
+      "aliases": [],
+      "properties": { "environment": "current", "framework": "laravel", "language": "php", "owner": "team:storefront", "purpose": "Provide a Laravel storefront architecture fixture." },
+      "evidencePath": "demo/book-retail/laravel-storefront/composer.json",
+      "range": null
+    },
+    {
+      "kind": "binding",
+      "id": "binding:order-submitted",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved journey identity for the scanner-resolved Kafka topic.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:message-channel:kafka%3Atopic%3Aorder.submitted",
+      "targetId": "channel:order-submitted"
+    },
+    {
+      "kind": "binding",
+      "id": "binding:inventory-reservation",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved journey identity for the scanner-resolved Kafka topic used by the runnable demo.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:message-channel:kafka%3Atopic%3Ainventory.reservation-requested",
+      "targetId": "channel:inventory-reservation"
+    },
+    {
+      "kind": "binding",
+      "id": "binding:inventory-reserved",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Give the scanner-resolved inventory completion topic a stable demo identity.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:message-channel:kafka%3Atopic%3Ainventory.reserved",
+      "targetId": "channel:inventory-reserved"
+    },
+    {
+      "kind": "binding",
+      "id": "binding:fulfilment-requested",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved journey identity for the scanner-resolved Kafka topic used by the runnable demo.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:message-channel:kafka%3Atopic%3Afulfilment.requested",
+      "targetId": "channel:fulfilment-requested"
+    },
+    {
+      "kind": "binding",
+      "id": "binding:dispatch-requested",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved journey identity for the scanner-resolved Kafka topic used by current notifications.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:message-channel:kafka%3Atopic%3Adispatch.requested",
+      "targetId": "channel:dispatch-requested"
+    },
+    {
+      "kind": "manual-node",
+      "id": "manual:storefront",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "TypeScript scanning is outside current scanner support; retain the runnable unsupported-language component as visibly manual.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "node": { "id": "deployable:storefront", "kind": "deployable", "name": "Storefront", "resolution": "resolved", "aliases": [], "properties": { "environment": "current" }, "evidenceIds": [] },
+      "evidencePath": "demo/book-retail/architecture.overlay.json",
+      "range": null
+    },
+    {
+      "kind": "manual-node",
+      "id": "manual:catalogue-service",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "Go scanning is outside current scanner support; retain the runnable catalogue component as visibly manual.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "node": { "id": "deployable:catalogue-service", "kind": "deployable", "name": "Catalogue Service", "resolution": "resolved", "aliases": [], "properties": { "environment": "current" }, "evidenceIds": [] },
+      "evidencePath": "demo/book-retail/architecture.overlay.json",
+      "range": null
+    },
+    {
+      "kind": "binding",
+      "id": "binding:payment-provider",
+      "governance": { "owner": null, "reviewer": null, "rationale": "Keep the approved journey identity for the scanner-resolved configured HTTP target.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "candidateKey": "dotnet:external-service:http%3Ahttp%3Apayment.local%3A4402",
+      "targetId": "external:payment-provider"
+    },
+    {
+      "kind": "manual-node",
+      "id": "manual:orders-database",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "PostgreSQL semantic scanning is outside current scanner support; retain the runnable order store as authored infrastructure evidence.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "node": { "id": "database:orders", "kind": "database", "name": "Orders", "resolution": "resolved", "aliases": [], "properties": { "provider": "postgresql", "environment": "current" }, "evidenceIds": [] },
+      "evidencePath": "demo/book-retail/infra/postgres/init.sql",
+      "range": null
+    },
+    {
+      "kind": "manual-node",
+      "id": "manual:inventory-database",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "PostgreSQL semantic scanning is outside current scanner support; retain the runnable inventory store as authored infrastructure evidence.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "node": { "id": "database:inventory", "kind": "database", "name": "Inventory", "resolution": "resolved", "aliases": [], "properties": { "provider": "postgresql", "environment": "current" }, "evidenceIds": [] },
+      "evidencePath": "demo/book-retail/infra/postgres/init.sql",
+      "range": null
+    },
+    {
+      "kind": "manual-relationship",
+      "id": "edge:storefront-calls-checkout",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "The TypeScript caller is outside current scanner support and remains visibly manual.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "relationship": "calls", "from": "deployable:storefront", "to": "deployable:checkout-service", "confidence": "confirmed", "resolution": "resolved",
+      "properties": { "label": "places an order" }, "evidencePath": "demo/book-retail/storefront/src/server.ts", "range": null
+    },
+    {
+      "kind": "manual-relationship",
+      "id": "edge:storefront-calls-catalogue",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "Go and TypeScript scanning is outside current scanner support and remains visibly manual.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "relationship": "calls", "from": "deployable:storefront", "to": "deployable:catalogue-service", "confidence": "confirmed", "resolution": "resolved",
+      "properties": { "label": "gets books and availability" }, "evidencePath": "demo/book-retail/storefront/src/server.ts", "range": null
+    },
+    {
+      "kind": "manual-relationship",
+      "id": "edge:ordering-depends-on-orders",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "The runnable service persists order state in the authored PostgreSQL schema; Npgsql scanning is outside current scanner support.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "relationship": "depends-on", "from": "deployable:ordering-service", "to": "database:orders", "confidence": "confirmed", "resolution": "resolved",
+      "properties": { "label": "depends on Orders database", "provider": "postgresql" }, "evidencePath": "demo/book-retail/infra/postgres/init.sql", "range": null
+    },
+    {
+      "kind": "manual-relationship",
+      "id": "edge:inventory-depends-on-inventory",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "The runnable worker persists reservation state in the authored PostgreSQL schema; Npgsql scanning is outside current scanner support.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "relationship": "depends-on", "from": "deployable:inventory-worker", "to": "database:inventory", "confidence": "confirmed", "resolution": "resolved",
+      "properties": { "label": "depends on Inventory database", "provider": "postgresql" }, "evidencePath": "demo/book-retail/infra/postgres/init.sql", "range": null
+    },
+    {
+      "kind": "manual-node",
+      "id": "manual:current-kubernetes",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "Kubernetes declarations are authored evidence; no Kubernetes scanner or live-state claim is made.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "node": { "id": "infrastructure:current-kubernetes", "kind": "infrastructure-resource", "name": "Current Kubernetes declarations", "resolution": "resolved", "aliases": [], "properties": { "environment": "current", "declarationOnly": true }, "evidenceIds": [] },
+      "evidencePath": "demo/book-retail/infra/kubernetes.yaml",
+      "range": null
+    },
+    {
+      "kind": "manual-node",
+      "id": "manual:legacy-azure-functions",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "Bicep is authored evidence for the legacy Function App; no semantic or live-state claim is made.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "node": { "id": "infrastructure:legacy-azure-functions", "kind": "infrastructure-resource", "name": "Legacy Azure Functions declaration", "resolution": "resolved", "aliases": [], "properties": { "environment": "legacy", "declarationOnly": true }, "evidenceIds": [] },
+      "evidencePath": "demo/book-retail/infra/legacy.bicep",
+      "range": null
+    },
+    {
+      "kind": "manual-relationship",
+      "id": "edge:storefront-deploys-to-kubernetes",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "The checked declaration names the current storefront workload; deployment and live state are explicitly not claimed.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "relationship": "deploys-to", "from": "deployable:storefront", "to": "infrastructure:current-kubernetes", "confidence": "confirmed", "resolution": "resolved",
+      "properties": { "label": "declared in Kubernetes", "declarationOnly": true }, "evidencePath": "demo/book-retail/infra/kubernetes.yaml", "range": null
+    },
+    {
+      "kind": "manual-relationship",
+      "id": "edge:catalogue-deploys-to-kubernetes",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "The checked declaration names the current catalogue workload; deployment and live state are explicitly not claimed.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "relationship": "deploys-to", "from": "deployable:catalogue-service", "to": "infrastructure:current-kubernetes", "confidence": "confirmed", "resolution": "resolved",
+      "properties": { "label": "declared in Kubernetes", "declarationOnly": true }, "evidencePath": "demo/book-retail/infra/kubernetes.yaml", "range": null
+    },
+    {
+      "kind": "manual-relationship",
+      "id": "edge:legacy-fulfilment-deploys-to-functions",
+      "governance": { "owner": null, "reviewer": "role:architecture-reviewer", "rationale": "The checked Bicep declaration names the legacy Function App; provisioning and live state are explicitly not claimed.", "createdOn": "2026-09-02", "lastReviewedOn": "2026-09-02", "reviewIntervalDays": 90, "expiresOn": null },
+      "relationship": "deploys-to", "from": "deployable:legacy-fulfilment", "to": "infrastructure:legacy-azure-functions", "confidence": "confirmed", "resolution": "resolved",
+      "properties": { "label": "declared as Azure Functions", "declarationOnly": true }, "evidencePath": "demo/book-retail/infra/legacy.bicep", "range": null
+    }
+  ]
+}

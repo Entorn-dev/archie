@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archie.dev/schemas/v1/scanner-package.schema.json",
+  "title": "Archie scanner package v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "id", "version", "sourceRepository", "sourceTag", "platform", "architecture",
+    "archieVersionRange", "protocolVersion", "expandedBytes", "entryCount", "capabilities", "permissions",
+    "license", "publisherKeyId"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "scanner-package/v1" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "version": { "type": "string", "minLength": 1 },
+    "sourceRepository": { "type": "string", "minLength": 1 },
+    "sourceTag": { "type": "string", "minLength": 1 },
+    "platform": { "type": "string", "minLength": 1 },
+    "architecture": { "type": "string", "minLength": 1 },
+    "archieVersionRange": { "type": "string", "minLength": 1 },
+    "protocolVersion": { "const": "scanner/v1" },
+    "expandedBytes": { "type": "integer", "minimum": 1, "maximum": 2147483648 },
+    "entryCount": { "type": "integer", "minimum": 1, "maximum": 50000 },
+    "capabilities": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readRepository", "network", "environment"],
+      "properties": {
+        "readRepository": { "const": true },
+        "network": { "const": false },
+        "environment": { "const": false }
+      }
+    },
+    "license": { "type": "string", "minLength": 1 },
+    "publisherKeyId": { "type": ["string", "null"], "minLength": 1 }
+  }
+}

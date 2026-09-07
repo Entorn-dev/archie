@@ -1,0 +1,8 @@
+{
+  "protocolVersion": "scanner/v1",
+  "type": "ready",
+  "scanner": {
+    "id": "archie.fake-book-retail",
+    "version": "1.0.0"
+  }
+}

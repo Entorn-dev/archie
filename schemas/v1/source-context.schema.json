@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archie.dev/schemas/v1/source-context.schema.json",
+  "title": "Archie snapshot-scoped source context v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "repository", "scanConfigurationDigest", "scanners",
+    "observationBundleDigest", "graphDigest", "ownership"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "source-context/v1" },
+    "repository": { "$ref": "common.schema.json#/$defs/repositoryRevision" },
+    "scanConfigurationDigest": { "$ref": "#/$defs/digest" },
+    "scanners": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/scanner" },
+      "uniqueItems": true
+    },
+    "observationBundleDigest": { "$ref": "#/$defs/digest" },
+    "graphDigest": { "$ref": "#/$defs/digest" },
+    "ownership": {
+      "type": "array",
+      "maxItems": 200000,
+      "items": { "$ref": "#/$defs/ownership" }
+    }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "scanner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scannerId", "scannerVersion", "path", "ownerCandidateKey", "ownerId", "ownershipKind",
+        "confidence", "claimResolution", "resolution", "derivationRule"
+      ],
+      "properties": {
+        "scannerId": { "$ref": "common.schema.json#/$defs/id" },
+        "scannerVersion": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "ownerCandidateKey": { "$ref": "common.schema.json#/$defs/id" },
+        "ownerId": { "$ref": "common.schema.json#/$defs/id" },
+        "ownershipKind": { "enum": ["project", "module", "component", "deployable"] },
+        "confidence": { "$ref": "common.schema.json#/$defs/confidence" },
+        "claimResolution": { "$ref": "common.schema.json#/$defs/resolution" },
+        "resolution": { "$ref": "common.schema.json#/$defs/resolution" },
+        "derivationRule": { "type": "string", "minLength": 1, "maxLength": 256 }
+      }
+    }
+  }
+}

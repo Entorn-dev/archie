@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archie.dev/schemas/v1/installed-scanners.schema.json",
+  "title": "Archie installed scanners receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "packages", "active"],
+  "properties": {
+    "schemaVersion": { "const": "installed-scanners/v1" },
+    "packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id", "version", "sha256", "origin", "trust", "catalogVersion", "verifiedKeyId",
+          "installedAt", "expandedBytes"
+        ],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "version": { "type": "string", "minLength": 1 },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "origin": { "enum": ["catalog", "local-unsigned"] },
+          "trust": { "enum": ["verified-first-party", "local-unsigned"] },
+          "catalogVersion": { "type": ["string", "null"], "minLength": 1 },
+          "verifiedKeyId": { "type": ["string", "null"], "minLength": 1 },
+          "installedAt": { "type": "string", "format": "date-time" },
+          "expandedBytes": { "type": "integer", "minimum": 1, "maximum": 2147483648 }
+        }
+      }
+    },
+    "active": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "version", "sha256"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "version": { "type": "string", "minLength": 1 },
+          "sha256": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

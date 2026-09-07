@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archie.dev/schemas/v1/overlay.schema.json",
+  "title": "Archie governed architecture overlay v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "defaultOwner", "entries"],
+  "properties": {
+    "schemaVersion": { "const": "overlay/v1" },
+    "defaultOwner": { "$ref": "common.schema.json#/$defs/id" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/manualNode" },
+          { "$ref": "#/$defs/manualRelationship" },
+          { "$ref": "#/$defs/binding" },
+          { "$ref": "#/$defs/merge" },
+          { "$ref": "#/$defs/suppression" },
+          { "$ref": "#/$defs/annotation" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "reviewer", "rationale", "createdOn", "lastReviewedOn", "reviewIntervalDays", "expiresOn"],
+      "properties": {
+        "owner": { "type": ["string", "null"], "minLength": 1 },
+        "reviewer": { "type": ["string", "null"], "minLength": 1 },
+        "rationale": { "type": "string", "minLength": 1 },
+        "createdOn": { "type": "string", "format": "date" },
+        "lastReviewedOn": { "type": ["string", "null"], "format": "date" },
+        "reviewIntervalDays": { "type": ["integer", "null"], "minimum": 30, "maximum": 365 },
+        "expiresOn": { "type": ["string", "null"], "format": "date" }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "name", "resolution", "aliases", "properties", "evidenceIds"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "kind": { "$ref": "common.schema.json#/$defs/nodeKind" },
+        "name": { "type": "string", "minLength": 1 },
+        "resolution": { "$ref": "common.schema.json#/$defs/resolution" },
+        "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "properties": { "$ref": "common.schema.json#/$defs/properties" },
+        "evidenceIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" }, "uniqueItems": true }
+      }
+    },
+    "manualNode": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "id", "governance", "node", "evidencePath", "range"],
+      "properties": {
+        "kind": { "const": "manual-node" }, "id": { "$ref": "common.schema.json#/$defs/id" },
+        "governance": { "$ref": "#/$defs/governance" }, "node": { "$ref": "#/$defs/node" },
+        "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$" },
+        "range": { "oneOf": [{ "$ref": "common.schema.json#/$defs/sourceRange" }, { "type": "null" }] }
+      }
+    },
+    "manualRelationship": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "id", "governance", "relationship", "from", "to", "confidence", "resolution", "properties", "evidencePath", "range"],
+      "properties": {
+        "kind": { "const": "manual-relationship" }, "id": { "$ref": "common.schema.json#/$defs/id" },
+        "governance": { "$ref": "#/$defs/governance" }, "relationship": { "$ref": "common.schema.json#/$defs/edgeKind" },
+        "from": { "$ref": "common.schema.json#/$defs/id" }, "to": { "$ref": "common.schema.json#/$defs/id" },
+        "confidence": { "$ref": "common.schema.json#/$defs/confidence" }, "resolution": { "$ref": "common.schema.json#/$defs/resolution" },
+        "properties": { "$ref": "common.schema.json#/$defs/properties" },
+        "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$" },
+        "range": { "oneOf": [{ "$ref": "common.schema.json#/$defs/sourceRange" }, { "type": "null" }] }
+      }
+    },
+    "binding": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "id", "governance", "candidateKey", "targetId"],
+      "properties": { "kind": { "const": "binding" }, "id": { "$ref": "common.schema.json#/$defs/id" }, "governance": { "$ref": "#/$defs/governance" }, "candidateKey": { "$ref": "common.schema.json#/$defs/id" }, "targetId": { "$ref": "common.schema.json#/$defs/id" } }
+    },
+    "merge": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "id", "governance", "candidateKeys", "targetId"],
+      "properties": { "kind": { "const": "merge" }, "id": { "$ref": "common.schema.json#/$defs/id" }, "governance": { "$ref": "#/$defs/governance" }, "candidateKeys": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/id" } }, "targetId": { "$ref": "common.schema.json#/$defs/id" } }
+    },
+    "suppression": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "id", "governance", "targetId"],
+      "properties": { "kind": { "const": "suppression" }, "id": { "$ref": "common.schema.json#/$defs/id" }, "governance": { "$ref": "#/$defs/governance" }, "targetId": { "$ref": "common.schema.json#/$defs/id" } }
+    },
+    "annotation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "id", "governance", "targetId", "aliases", "properties", "evidencePath", "range"],
+      "properties": {
+        "kind": { "const": "annotation" }, "id": { "$ref": "common.schema.json#/$defs/id" },
+        "governance": { "$ref": "#/$defs/governance" }, "targetId": { "$ref": "common.schema.json#/$defs/id" },
+        "aliases": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "properties": { "$ref": "common.schema.json#/$defs/properties" },
+        "evidencePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$" },
+        "range": { "oneOf": [{ "$ref": "common.schema.json#/$defs/sourceRange" }, { "type": "null" }] }
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+mise_bin="$HOME/.local/bin/mise"
+mise_version="2026.9.0"
+
+echo "[archie setup] provisioning pinned toolchains"
+if [[ ! -x "$mise_bin" ]] || [[ "$($mise_bin --version 2>/dev/null | awk '{print $1}')" != "$mise_version" ]]; then
+  mkdir -p "$(dirname "$mise_bin")"
+  curl -fsSL https://mise.run | MISE_VERSION="$mise_version" MISE_INSTALL_PATH="$mise_bin" sh
+fi
+
+"$mise_bin" trust "$repo_root/mise.toml"
+"$mise_bin" install --yes
+eval "$("$mise_bin" env -s bash)"
+
+dotnet_install_location="/etc/dotnet/install_location_x64"
+if [[ ! -f "$dotnet_install_location" ]] || [[ "$(cat "$dotnet_install_location")" != "$DOTNET_ROOT" ]]; then
+  sudo install -d "$(dirname "$dotnet_install_location")"
+  echo "$DOTNET_ROOT" | sudo tee "$dotnet_install_location" >/dev/null
+fi
+
+if ! command -v pg_config >/dev/null 2>&1 || [[ ! -x "$(pg_config --bindir)/postgres" ]]; then
+  echo "[archie setup] installing local PostgreSQL runtime"
+  sudo apt-get update -qq
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq postgresql-15
+fi
+
+profile_marker="# Archie repository mise activation"
+if ! grep -Fqx "$profile_marker" "$HOME/.bash_profile" 2>/dev/null; then
+  cat >> "$HOME/.bash_profile" <<EOF
+
+$profile_marker
+if [[ "\$PWD" == "$repo_root" || "\$PWD" == "$repo_root/"* ]]; then
+  eval "\$("$mise_bin" activate bash)"
+fi
+EOF
+fi
+
+echo "[archie setup] restoring locked dependencies"
+dotnet restore "$repo_root/Archie.slnx" --locked-mode
+dotnet restore "$repo_root/demo/book-retail/BookRetail.slnx" --locked-mode
+pnpm --dir "$repo_root" install --frozen-lockfile
+go -C "$repo_root/demo/book-retail/catalogue" mod download
+go -C "$repo_root/demo/book-retail/kafka-broker" mod download
+pnpm --dir "$repo_root/web" exec playwright install chromium
+
+echo "[archie setup] installing pinned public scanner releases for contributor acceptance"
+scanner_root="$repo_root/.amp/runtime/scanners"
+mkdir -p "$scanner_root"
+install_scanner() {
+  local id="$1" version="$2" digest="$3" url="$4"
+  local destination="$scanner_root/$id-$version"
+  [[ -f "$destination/scanner.json" ]] && return
+  local archive temporary
+  archive="$(mktemp)"
+  temporary="$(mktemp -d "$scanner_root/.extract.XXXXXX")"
+  curl -fsSL "$url" -o "$archive"
+  echo "$digest  $archive" | sha256sum -c -
+  tar -xzf "$archive" -C "$temporary"
+  rm -f "$archive"
+  rm -rf "$destination"
+  mv "$temporary" "$destination"
+}
+install_scanner \
+  dotnet 1.3.0 f9facfe8894c62d4c7636c0bdfff285e8df0185d1cf570f83d4db04a196a8f02 \
+  https://github.com/Entorn-dev/entorn-scanner-dotnet/releases/download/v1.3.0/entorn-scanner-dotnet-linux-x64-1.3.0.tar.gz
+install_scanner \
+  php 2.0.0 0c35982552f8946c327ddcca6f40de18b99907d4431700955c4602351ff931e5 \
+  https://github.com/Entorn-dev/entorn-scanner-php/releases/download/v2.0.0/entorn-scanner-php-linux-x64-2.0.0.tar.gz
+
+"$repo_root/.agents/resume" >/dev/null
+echo "[archie setup] complete"

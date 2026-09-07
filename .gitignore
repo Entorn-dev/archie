@@ -1,0 +1,14 @@
+bin/
+obj/
+node_modules/
+web/dist/
+demo/book-retail/storefront/dist/
+web/playwright-report/
+web/test-results/
+web/*.tsbuildinfo
+.amp/in/
+.amp/portals/
+.amp/generated/
+.amp/releases/
+.amp/runtime/
+.amp/review/

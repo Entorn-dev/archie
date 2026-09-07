@@ -1,0 +1,8 @@
+{
+  "protocolVersion": "scanner/v1",
+  "type": "observation",
+  "observation": {
+    "kind": "canonical-graph",
+    "id": "observation:not-allowed"
+  }
+}

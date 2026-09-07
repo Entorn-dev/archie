@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archie.dev/schemas/v1/common.schema.json",
+  "title": "Archie canonical graph common definitions",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[^\\s]+$"
+    },
+    "nodeKind": {
+      "enum": [
+        "system", "domain", "repository", "deployable", "module", "component",
+        "http-endpoint", "rpc-endpoint", "message-channel", "event-contract", "api-contract",
+        "database", "cache", "object-store", "external-service", "infrastructure-resource", "team"
+      ]
+    },
+    "edgeKind": {
+      "enum": [
+        "contains", "references", "exposes", "calls", "publishes", "subscribes",
+        "reads-from", "writes-to", "implements", "uses-contract", "deploys-to", "owned-by", "depends-on"
+      ]
+    },
+    "provenance": { "enum": ["deterministic", "manual", "ai", "runtime"] },
+    "confidence": { "enum": ["confirmed", "inferred"] },
+    "resolution": { "enum": ["resolved", "unresolved", "ambiguous"] },
+    "properties": {
+      "type": "object",
+      "propertyNames": { "minLength": 1 },
+      "additionalProperties": true
+    },
+    "repositoryRevision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repositoryId", "remoteUrl", "revision", "isDirty", "contentDigest"],
+      "properties": {
+        "repositoryId": { "$ref": "#/$defs/id" },
+        "remoteUrl": { "type": ["string", "null"] },
+        "revision": { "type": "string", "minLength": 1 },
+        "isDirty": { "type": "boolean" },
+        "contentDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "sourceRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["startLine", "startColumn", "endLine", "endColumn"],
+      "properties": {
+        "startLine": { "type": "integer", "minimum": 1 },
+        "startColumn": { "type": "integer", "minimum": 1 },
+        "endLine": { "type": "integer", "minimum": 1 },
+        "endColumn": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "claimId", "provenance", "scannerId", "scannerVersion", "extractionMethod",
+        "path", "range", "confidence", "properties"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "claimId": { "$ref": "#/$defs/id" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "scannerId": { "type": ["string", "null"] },
+        "scannerVersion": { "type": ["string", "null"] },
+        "extractionMethod": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$" },
+        "range": { "oneOf": [{ "$ref": "#/$defs/sourceRange" }, { "type": "null" }] },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "properties": { "$ref": "#/$defs/properties" }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "code", "severity", "message", "subjectId"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "code": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "message": { "type": "string", "minLength": 1 },
+        "subjectId": { "oneOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "path", "message"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    },
+    "sourceOwnershipClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scannerId", "scannerVersion", "path", "ownerCandidateKey", "ownershipKind",
+        "confidence", "resolution", "derivationRule"
+      ],
+      "properties": {
+        "scannerId": { "$ref": "#/$defs/id" },
+        "scannerVersion": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "ownerCandidateKey": { "$ref": "#/$defs/id" },
+        "ownershipKind": { "enum": ["project", "module", "component", "deployable"] },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "resolution": { "$ref": "#/$defs/resolution" },
+        "derivationRule": { "type": "string", "minLength": 1, "maxLength": 256 }
+      }
+    }
+  }
+}

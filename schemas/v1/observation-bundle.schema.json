@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archie.dev/schemas/v1/observation-bundle.schema.json",
+  "title": "Archie observation bundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "source", "scanConfigurationDigest", "repository", "scanners", "observations", "diagnostics", "redactions"],
+  "properties": {
+    "schemaVersion": { "const": "observations/v1" },
+    "source": { "enum": ["authored", "scanner"] },
+    "scanConfigurationDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "repository": { "$ref": "common.schema.json#/$defs/repositoryRevision" },
+    "scanners": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "version"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "version": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/entityObservation" },
+          { "$ref": "#/$defs/relationshipObservation" }
+        ]
+      }
+    },
+    "diagnostics": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/diagnostic" } },
+    "redactions": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/redaction" } }
+  },
+  "$defs": {
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "kind", "explicitId", "name", "resolution", "identitySignals", "properties"],
+      "properties": {
+        "key": { "$ref": "common.schema.json#/$defs/id" },
+        "kind": { "$ref": "common.schema.json#/$defs/nodeKind" },
+        "explicitId": { "oneOf": [{ "$ref": "common.schema.json#/$defs/id" }, { "type": "null" }] },
+        "name": { "type": "string", "minLength": 1 },
+        "resolution": { "$ref": "common.schema.json#/$defs/resolution" },
+        "identitySignals": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+        "properties": { "$ref": "common.schema.json#/$defs/properties" }
+      }
+    },
+    "entityObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "evidence", "entity"],
+      "properties": {
+        "kind": { "const": "entity" },
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "evidence": { "$ref": "common.schema.json#/$defs/evidence" },
+        "entity": { "$ref": "#/$defs/candidate" }
+      }
+    },
+    "relationshipObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "evidence", "relationship", "from", "to", "properties"],
+      "properties": {
+        "kind": { "const": "relationship" },
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "evidence": { "$ref": "common.schema.json#/$defs/evidence" },
+        "relationship": { "$ref": "common.schema.json#/$defs/edgeKind" },
+        "from": { "$ref": "#/$defs/candidate" },
+        "to": { "$ref": "#/$defs/candidate" },
+        "properties": { "$ref": "common.schema.json#/$defs/properties" }
+      }
+    }
+  }
+}

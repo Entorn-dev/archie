@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archie.dev/schemas/v1/scanner-catalog.schema.json",
+  "title": "Archie scanner catalog v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "catalogVersion", "generatedAt", "releases"],
+  "properties": {
+    "schemaVersion": { "const": "scanner-catalog/v1" },
+    "catalogVersion": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "releases": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": { "$ref": "#/$defs/release" }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readRepository", "network", "environment"],
+      "properties": {
+        "readRepository": { "const": true },
+        "network": { "const": false },
+        "environment": { "const": false }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "name", "version", "channel", "sourceRepository", "sourceTag", "platform", "architecture",
+        "archieVersionRange", "protocolVersion", "assetUrl", "compressedBytes", "expandedBytes", "entryCount",
+        "sha256", "signingKeyId", "packageSignature", "capabilities", "permissions", "license",
+        "releaseNotesUrl", "revoked"
+      ],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "version": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "channel": { "enum": ["stable"] },
+        "sourceRepository": { "type": "string", "format": "uri", "minLength": 1 },
+        "sourceTag": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "platform": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "architecture": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "archieVersionRange": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "protocolVersion": { "const": "scanner/v1" },
+        "assetUrl": { "type": "string", "format": "uri" },
+        "compressedBytes": { "type": "integer", "minimum": 1, "maximum": 1073741824 },
+        "expandedBytes": { "type": "integer", "minimum": 1, "maximum": 2147483648 },
+        "entryCount": { "type": "integer", "minimum": 1, "maximum": 50000 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "signingKeyId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "packageSignature": { "type": "string", "minLength": 1, "contentEncoding": "base64" },
+        "capabilities": { "type": "array", "maxItems": 256, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "permissions": { "$ref": "#/$defs/permissions" },
+        "license": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "releaseNotesUrl": { "type": "string", "format": "uri" },
+        "revoked": { "type": "boolean" }
+      }
+    }
+  }
+}

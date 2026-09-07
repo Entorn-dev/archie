@@ -1,0 +1,14 @@
+{
+  "_readme": [
+    "This minimal lock file is static scanner evidence; the demo is not installed or executed."
+  ],
+  "content-hash": "evidence-only",
+  "packages": [
+    {
+      "name": "laravel/framework",
+      "version": "v12.0.0",
+      "type": "library"
+    }
+  ],
+  "packages-dev": []
+}

@@ -1,0 +1,6 @@
+{
+  "protocolVersion": "scanner/v1",
+  "type": "ready",
+  "scanner": { "id": "archie.fixture", "version": "1.0.0" },
+  "unexpected": true
+}

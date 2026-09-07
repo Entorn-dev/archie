@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archie.dev/schemas/v1/protocol-message.schema.json",
+  "title": "Archie scanner protocol v1",
+  "oneOf": [
+    { "$ref": "#/$defs/ready" },
+    { "$ref": "#/$defs/scanRequest" },
+    { "$ref": "#/$defs/observation" },
+    { "$ref": "#/$defs/sourceOwnership" },
+    { "$ref": "#/$defs/diagnostic" },
+    { "$ref": "#/$defs/completed" }
+  ],
+  "$defs": {
+    "base": {
+      "type": "object",
+      "required": ["protocolVersion", "type"],
+      "properties": {
+        "protocolVersion": { "const": "scanner/v1" },
+        "type": { "type": "string" }
+      }
+    },
+    "scanner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "ready": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["protocolVersion", "type", "scanner"],
+          "properties": {
+            "protocolVersion": true,
+            "type": { "const": "ready" },
+            "scanner": { "$ref": "#/$defs/scanner" }
+          }
+        }
+      ]
+    },
+    "scanRequest": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["protocolVersion", "type", "context"],
+          "properties": {
+            "protocolVersion": true,
+            "type": { "const": "scan-request" },
+            "context": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["repository", "checkoutPath", "configuration"],
+              "properties": {
+                "repository": { "$ref": "common.schema.json#/$defs/repositoryRevision" },
+                "checkoutPath": { "type": "string", "minLength": 1 },
+                "configuration": {}
+              }
+            }
+          }
+        }
+      ]
+    },
+    "observation": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["protocolVersion", "type", "observation"],
+          "properties": {
+            "protocolVersion": true,
+            "type": { "const": "observation" },
+            "observation": {
+              "oneOf": [
+                { "$ref": "observation-bundle.schema.json#/$defs/entityObservation" },
+                { "$ref": "observation-bundle.schema.json#/$defs/relationshipObservation" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "sourceOwnership": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["protocolVersion", "type", "ownership"],
+          "properties": {
+            "protocolVersion": true,
+            "type": { "const": "source-ownership" },
+            "ownership": { "$ref": "common.schema.json#/$defs/sourceOwnershipClaim" }
+          }
+        }
+      ]
+    },
+    "diagnostic": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["protocolVersion", "type", "diagnostic"],
+          "properties": {
+            "protocolVersion": true,
+            "type": { "const": "diagnostic" },
+            "diagnostic": { "$ref": "common.schema.json#/$defs/diagnostic" }
+          }
+        }
+      ]
+    },
+    "completed": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["protocolVersion", "type", "summary"],
+          "properties": {
+            "protocolVersion": true,
+            "type": { "const": "completed" },
+            "summary": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["observationCount"],
+              "properties": { "observationCount": { "type": "integer", "minimum": 0 } }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "scanner-manifest/v1",
+  "id": "archie.fake-book-retail",
+  "version": "1.0.0",
+  "executable": "node",
+  "arguments": ["worker.mjs"],
+  "artifactGlobs": ["PROJECT_BRIEF.md"],
+  "capabilities": ["fake-book-retail-observations"],
+  "configurationSchema": {
+    "type": "object",
+    "additionalProperties": false
+  },
+  "permissions": {
+    "readRepository": true,
+    "network": false,
+    "environment": false
+  }
+}

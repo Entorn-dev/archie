@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "architecture-view/v1",
+  "id": "place-order",
+  "name": "Place an order",
+  "description": "Follow a customer order from the Storefront through current ordering, legacy fulfilment, and current notifications.",
+  "layoutDirection": "RIGHT",
+  "selectedId": "deployable:ordering-service",
+  "pathQuery": {
+    "from": "deployable:storefront",
+    "to": "deployable:notification-service",
+    "direction": "downstream",
+    "maxDepth": 8,
+    "edgeKinds": ["calls", "publishes", "subscribes"]
+  }
+}

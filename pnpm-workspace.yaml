@@ -1,0 +1,5 @@
+packages:
+  - web
+  - demo/book-retail/storefront
+allowBuilds:
+  esbuild: true

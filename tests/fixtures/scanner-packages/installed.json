@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "installed-scanners/v1",
+  "packages": [
+    {
+      "id": "archie.fake-book-retail",
+      "version": "1.0.0",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "origin": "local-unsigned",
+      "trust": "local-unsigned",
+      "catalogVersion": null,
+      "verifiedKeyId": null,
+      "installedAt": "2026-09-04T00:00:00+00:00",
+      "expandedBytes": 1024
+    }
+  ],
+  "active": [
+    {
+      "id": "archie.fake-book-retail",
+      "version": "1.0.0",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}

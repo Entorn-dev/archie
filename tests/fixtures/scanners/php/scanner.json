@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "scanner-manifest/v1",
+  "id": "archie.php",
+  "version": "1.1.0",
+  "executable": "dotnet",
+  "arguments": ["Archie.Scanner.Php.dll"],
+  "artifactGlobs": ["**/composer.json", "**/*.php"],
+  "capabilities": ["php-composer", "laravel-application", "source-ownership"],
+  "configurationSchema": {
+    "type": "object",
+    "additionalProperties": false
+  },
+  "permissions": {
+    "readRepository": true,
+    "network": false,
+    "environment": false
+  }
+}

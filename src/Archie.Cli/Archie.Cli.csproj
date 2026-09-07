@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>archie</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Entorn.Scanner.Contracts" />
+    <PackageReference Include="JsonSchema.Net" />
+    <PackageReference Include="ModelContextProtocol.Core" />
+    <PackageReference Include="NuGet.Versioning" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Archie.Contracts/Archie.Contracts.csproj" />
+    <ProjectReference Include="../Archie.Core/Archie.Core.csproj" />
+    <ProjectReference Include="../Archie.Runner/Archie.Runner.csproj" />
+    <Using Include="Entorn.Scanner.Contracts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="../../schemas/v1/*.schema.json" Link="schemas/v1/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Archie.Cli.Tests" />
+  </ItemGroup>
+</Project>

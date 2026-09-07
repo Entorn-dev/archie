@@ -1,0 +1,15 @@
+{
+  "protocolVersion": "scanner/v1",
+  "type": "scan-request",
+  "context": {
+    "repository": {
+      "repositoryId": "book-retail",
+      "remoteUrl": null,
+      "revision": "fixture",
+      "isDirty": false,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "checkoutPath": "/tmp/book-retail",
+    "configuration": {}
+  }
+}
